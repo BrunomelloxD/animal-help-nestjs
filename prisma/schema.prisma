@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Ong {
+  id               Int       @id @default(autoincrement())
+  name             String
+  latitude         Float
+  longitude        Float
+  about            String
+  instructions     String
+  opening_hours    String
+  open_on_weekends Boolean
+  id_active        Boolean
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+  deleted_at       DateTime?
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  Image OngImage[]
+
+  @@map("ongs")
+}
+
+model OngImage {
+  id         String    @id @default(uuid())
+  ong        Ong       @relation(fields: [ong_id], references: [id])
+  ong_id     Int
+  url        String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("ong_images")
+}
+
+model User {
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  password   String
+  avatar_url String?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  role       UserRole  @default(CUSTOMER)
+
+  Ong Ong[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}

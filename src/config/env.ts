@@ -1,0 +1,11 @@
+import 'dotenv';
+
+export const server = {
+    port: process.env.PORT ? +process.env.PORT : 3000,
+};
+
+export const security = {
+    bcrypt: {
+        saltRounds: process.env.SALT_ROUNDS ? +process.env.SALT_ROUNDS : 10,
+    },
+};
