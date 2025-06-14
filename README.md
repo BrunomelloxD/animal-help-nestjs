@@ -28,6 +28,22 @@
 
 ## Project setup
 
+## Quick Start with Docker
+To quickly start the application, you can use Docker Compose:
+
+```bash
+$ docker-compose up
+```
+
+## This command will:
+- Start the database
+- Install dependencies
+- Run Prisma migrations
+- Start the application in development mode
+
+## Manual Setup
+If you prefer to run the application manually, follow the steps below:
+
 ```bash
 $ npm install
 ```
