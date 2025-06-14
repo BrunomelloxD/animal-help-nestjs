@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../config/prisma/services/prisma.service';
 import { IUserRepository } from './user.repository.interface';
 import { User, Prisma } from '../../../../generated/prisma';
+import { Role } from 'src/common/enums/role.enum';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -25,11 +28,24 @@ export class UserRepository implements IUserRepository {
         });
     }
 
-    async findAll(): Promise<User[]> {
-        return this.prisma.user.findMany({
-            where: { deleted_at: null },
-            orderBy: { created_at: 'desc' },
-        });
+    async findAll({ page = 1, limit = 10 }: PaginationDto): Promise<PaginatedResponseDto<User>> {
+        const [users, total] = await this.prisma.$transaction([
+            this.prisma.user.findMany({
+                skip: (page - 1) * limit,
+                take: limit,
+                orderBy: { created_at: 'desc' },
+            }),
+            this.prisma.user.count(),
+        ]);
+
+        return {
+            data: users,
+            meta: {
+                total,
+                page,
+                last_page: Math.ceil(total / limit),
+            },
+        };
     }
 
     async delete(id: string): Promise<void> {

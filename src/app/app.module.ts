@@ -5,15 +5,21 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { OngModule } from 'src/modules/ongs/ong.module';
 import { UserModule } from 'src/modules/users/user.module';
+import { AdminModule } from 'src/modules/admin/admin.module';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Module({
-  imports: [OngModule, UserModule, AuthModule],
+  imports: [OngModule, UserModule, AuthModule, AdminModule],
   controllers: [],
   providers: [
     JwtService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     }
   ],
 })

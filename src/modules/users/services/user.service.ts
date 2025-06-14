@@ -3,13 +3,15 @@ import { Prisma, User } from '../../../../generated/prisma'
 import { UserRepository } from "../repositories/user.repository";
 import * as bcrypt from 'bcrypt';
 import { security } from '../../../config/env'
+import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { PaginatedResponseDto } from "src/common/dtos/paginated-response.dto";
 
 @Injectable()
 export class UserService {
     constructor(private readonly userRepository: UserRepository) { }
 
-    findAll() {
-        return this.userRepository.findAll();
+    findAll(paginationDto: PaginationDto): Promise<PaginatedResponseDto<User>> {
+        return this.userRepository.findAll(paginationDto);
     }
 
     create(data: Prisma.UserCreateInput): Promise<User> {

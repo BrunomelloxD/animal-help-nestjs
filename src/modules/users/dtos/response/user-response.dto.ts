@@ -21,4 +21,7 @@ export class UserResponseDto {
 
     @Expose()
     updated_at: Date;
+
+    @Expose()
+    deleted_at?: Date;
 }
