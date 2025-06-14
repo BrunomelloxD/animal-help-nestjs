@@ -33,6 +33,7 @@ model Ong {
 
   Image OngImage[]
 
+  @@index([deleted_at])
   @@map("ongs")
 }
 
@@ -45,6 +46,7 @@ model OngImage {
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
+  @@index([deleted_at])
   @@map("ong_images")
 }
 
@@ -61,6 +63,7 @@ model User {
 
   Ong Ong[]
 
+  @@index([deleted_at])
   @@map("users")
 }
 

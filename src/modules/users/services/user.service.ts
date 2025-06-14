@@ -7,9 +7,6 @@ import { security } from '../../../config/env'
 @Injectable()
 export class UserService {
     constructor(private readonly userRepository: UserRepository) { }
-    getHello(): string {
-        return 'user service';
-    }
 
     findAll() {
         return this.userRepository.findAll();
@@ -24,5 +21,17 @@ export class UserService {
 
     async findById(id: string): Promise<User | null> {
         return await this.userRepository.findById(id);
+    }
+
+    delete(id: string): Promise<void> {
+        return this.userRepository.delete(id);
+    }
+
+    async findByEmail(email: string): Promise<User | null> {
+        return await this.userRepository.findByEmail(email);
+    }
+
+    update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+        return this.userRepository.update(id, data);
     }
 }

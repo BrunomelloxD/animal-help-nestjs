@@ -6,6 +6,10 @@ export const server = {
 
 export const security = {
     bcrypt: {
-        saltRounds: process.env.SALT_ROUNDS ? +process.env.SALT_ROUNDS : 10,
+        saltRounds: process.env.SALT_ROUNDS ? +process.env.SALT_ROUNDS : 10
     },
+    jwt: {
+        expiresIn: process.env.JWT_EXPIRES_IN || '1d',
+        secret: process.env.JWT_SECRET || '123'
+    }
 };
