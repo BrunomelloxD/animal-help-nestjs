@@ -8,9 +8,22 @@ import { UserModule } from 'src/modules/users/user.module';
 import { AdminModule } from 'src/modules/admins/admin.module';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { EmailModule } from 'src/modules/mailer/mailer.module';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { server } from 'src/config/env';
 
 @Module({
-  imports: [OngModule, UserModule, AuthModule, AdminModule, EmailModule],
+  imports: [OngModule, UserModule, AuthModule, AdminModule, EmailModule,
+    RabbitMQModule.forRoot({
+      exchanges: [
+        {
+          name: 'ong',
+          type: 'direct',
+        },
+      ],
+      uri: server.rabbitqm.url,
+      connectionInitOptions: { wait: false }
+    }),
+  ],
   controllers: [],
   providers: [
     JwtService,

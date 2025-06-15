@@ -17,6 +17,7 @@ services:
       - 3000:3000
     depends_on:
       - database
+      - rabbitmq
     volumes:
       - .:/usr/node/app:rw
       - ./node_modules:/usr/node/app/node_modules:rw
@@ -46,6 +47,22 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  nest-app:
+    build: .
+    environment:
+      - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672
 
 volumes:
   postgres:
