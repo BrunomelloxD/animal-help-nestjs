@@ -29,7 +29,7 @@ export class AuthController {
   @Public()
   @Post('recover-password/verify')
   async verifyRecoveryCode(@Body() data: VerifyRecoveryCodeDto) {
-    return this.passwordRecoveryService.verifyRecoveryCode(data.email, data.code);
+    return this.passwordRecoveryService.verifyRecoveryCode(data);
   }
 
   @Public()
