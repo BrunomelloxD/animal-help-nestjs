@@ -20,8 +20,8 @@ export class UserController {
     @Get()
     @Roles(Role.ADMIN)
     @UseInterceptors(new PaginationTransformInterceptor(UserResponseDto))
-    findAll(@Query() paginationDto: PaginationDto): Promise<PaginatedResponseDto<User>> {
-        return this.userService.findAll(paginationDto);
+    findAll(@Query() queryParams: PaginationDto): Promise<PaginatedResponseDto<User>> {
+        return this.userService.findAll(queryParams);
     }
 
     @Post()

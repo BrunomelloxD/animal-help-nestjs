@@ -1,5 +1,5 @@
 
-import { Body, Controller, Post, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { UserService } from 'src/modules/users/services/user.service';
