@@ -1,17 +1,15 @@
-
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { LoginUserDto } from '../dtos/login-user.dto';
-import { UserService } from 'src/modules/users/services/user.service';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RecoveryPasswordDto } from '../dtos/recovery-password.dto';
 import { VerifyRecoveryCodeDto } from '../dtos/verify-recovery-code.dto';
 import { ResetPasswordDto } from '../dtos/reset-password.dto';
-import { PasswordRecoveryService } from 'src/modules/password-recovery/services/password-recovery.service';
+import { PasswordService } from '../services/password.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService, private userService: UserService, private passwordRecoveryService: PasswordRecoveryService) { }
+  constructor(private authService: AuthService, private passwordService: PasswordService) { }
 
   @Public()
   @Post('login')
@@ -23,18 +21,18 @@ export class AuthController {
   @Public()
   @Post('recover-password/request')
   recoverPassword(@Body() data: RecoveryPasswordDto) {
-    return this.passwordRecoveryService.recoverPassword(data.email);
+    return this.passwordService.recoverPassword(data.email);
   }
 
   @Public()
   @Post('recover-password/verify')
   async verifyRecoveryCode(@Body() data: VerifyRecoveryCodeDto) {
-    return this.passwordRecoveryService.verifyRecoveryCode(data);
+    return this.passwordService.verifyRecoveryCode(data);
   }
 
   @Public()
   @Post('recover-password/reset')
   async resetPassword(@Body() data: ResetPasswordDto) {
-    return this.passwordRecoveryService.resetPassword(data);
+    return this.passwordService.resetPassword(data);
   }
 }

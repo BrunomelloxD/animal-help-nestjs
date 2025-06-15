@@ -8,10 +8,9 @@ import { UserModule } from 'src/modules/users/user.module';
 import { AdminModule } from 'src/modules/admins/admin.module';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { EmailModule } from 'src/modules/mailer/mailer.module';
-import { PasswordRecoveryModule } from 'src/modules/password-recovery/password-recovery.module';
 
 @Module({
-  imports: [OngModule, UserModule, AuthModule, AdminModule, EmailModule, PasswordRecoveryModule],
+  imports: [OngModule, UserModule, AuthModule, AdminModule, EmailModule],
   controllers: [],
   providers: [
     JwtService,
