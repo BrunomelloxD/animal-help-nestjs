@@ -50,6 +50,19 @@ model OngImage {
   @@map("ong_images")
 }
 
+model PasswordResetCode {
+  id       String   @id @default(cuid())
+  code     String   @db.VarChar(6) @unique
+  used     Boolean  @default(false)
+  expires_at DateTime?
+  created_at DateTime @default(now())
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, code])
+  @@map("password_reset_code")
+}
+
 model User {
   id         String    @id @default(uuid())
   name       String
@@ -62,6 +75,7 @@ model User {
   role       UserRole  @default(CUSTOMER)
 
   Ong Ong[]
+  passwordResetCodes PasswordResetCode[]
 
   @@index([deleted_at, id])
   @@map("users")

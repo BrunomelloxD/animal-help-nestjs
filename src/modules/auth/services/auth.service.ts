@@ -28,8 +28,8 @@ export class AuthService {
         const { email, password } = credentials;
 
         const user = await this.getUserByEmail(email);
-        await this.validatePassword(password, user.password);
         this.ensureUserIsActive(user);
+        await this.validatePassword(password, user.password);
 
         return user;
     }
