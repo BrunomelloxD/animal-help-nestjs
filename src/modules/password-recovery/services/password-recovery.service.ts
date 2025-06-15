@@ -24,17 +24,17 @@ export class PasswordRecoveryService {
         await this.mailerService.sendRecoveryCode(user.email, code);
     }
 
-    async verifyRecoveryCode(email: string, code: string): Promise<void> {
-        const user = await this.userService.findByEmail(email);
+    async verifyRecoveryCode(data: { email: string, code: string }): Promise<void> {
+        const user = await this.userService.findByEmail(data.email);
 
         if (!user) {
-            throw new NotFoundException(`User with email ${email} not found`);
+            throw new NotFoundException(`User with email ${data.email} not found`);
         }
 
-        const codeData = await this.passwordRecoveryRepository.findByRecoveryCode(code, user.id);
+        const codeData = await this.passwordRecoveryRepository.findByRecoveryCode(data.code, user.id);
 
         if (!codeData) {
-            throw new NotFoundException(`Recovery code ${code} not found`);
+            throw new NotFoundException(`Recovery code ${data.code} not found`);
         }
     }
 
