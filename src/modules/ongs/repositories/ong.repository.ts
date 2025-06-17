@@ -10,6 +10,32 @@ import { Role } from "src/common/enums/role.enum";
 export class OngRepository implements IOngRepository {
     constructor(private readonly prisma: PrismaService) { }
 
+    async findOngByUserId(
+        { page = 1, limit = 10 }: PaginationDto,
+        userId: string
+    ): Promise<PaginatedResponseDto<Ong>> {
+        const [ongs, total] = await this.prisma.$transaction([
+            this.prisma.ong.findMany({
+                skip: (page - 1) * limit,
+                take: limit,
+                where: { user_id: userId },
+                orderBy: { created_at: 'desc' },
+            }),
+            this.prisma.ong.count({
+                where: { user_id: userId },
+            }),
+        ]);
+
+        return {
+            data: ongs,
+            meta: {
+                total,
+                page,
+                last_page: Math.ceil(total / limit),
+            },
+        };
+    }
+
     async update(id: string, data: Prisma.OngUpdateInput): Promise<Ong> {
         const ID = +id;
         return this.prisma.ong.update({
@@ -36,6 +62,9 @@ export class OngRepository implements IOngRepository {
                         id: true,
                         url: true,
                         created_at: true
+                    },
+                    where: {
+                        deleted_at: null
                     }
                 }
             },

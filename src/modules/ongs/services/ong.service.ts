@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { Ong, Prisma } from "generated/prisma";
 import { PaginatedResponseDto } from "src/common/dtos/paginated-response.dto";
 import { OngRepository } from "../repositories/ong.repository";
@@ -8,10 +8,15 @@ import { OngImageRepository } from "../repositories/ong-image.repository";
 import { server } from 'src/common/config/env.config';
 import { Role } from "src/common/enums/role.enum";
 import { UpdateOngDto } from "../dtos/update-ong.dto";
+import { DeleteOngImagesDto } from "../dtos/delete-ong-images.dto";
 
 @Injectable()
 export class OngService {
     constructor(private readonly ongRepository: OngRepository, private readonly ongImageRepository: OngImageRepository) { }
+
+    async deleteImages(dto: DeleteOngImagesDto): Promise<void> {
+        await this.ongImageRepository.softDeleteMany(dto.image_ids);
+    }
 
     async update(id: number, data: UpdateOngDto, files?: Express.Multer.File[]): Promise<Ong> {
         const updatedOng = await this.ongRepository.update(id.toString(), data);
@@ -23,8 +28,21 @@ export class OngService {
         return updatedOng;
     }
 
+    async findOngByUserId(userId: string, queryParams: PaginationDto): Promise<PaginatedResponseDto<Ong>> {
+        return await this.ongRepository.findOngByUserId(queryParams, userId);
+    }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: string, userId: string, role: Role): Promise<void> {
+        const ong = await this.ongRepository.findById(id);
+
+        if (!ong) {
+            throw new NotFoundException(`Ong with id ${id} not found`);
+        }
+
+        if (role !== Role.ADMIN && id !== userId) {
+            throw new ForbiddenException('You can only delete your own ong');
+        }
+
         return await this.ongRepository.delete(id);
     }
 

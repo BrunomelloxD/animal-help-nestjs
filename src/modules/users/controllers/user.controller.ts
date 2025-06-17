@@ -74,13 +74,4 @@ export class UserController {
 
         return this.userService.update(id, data);
     }
-
-    // @Get('ong/by-user-id/:id')
-    // async findOngByUserId(@Param() param: Record<'id', string>, @GetUserId() userId: string, @GetUserRole() role: Role): Promise<User | null> {
-    //     if (role !== Role.ADMIN && param.id !== userId) {
-    //         throw new ForbiddenException('You can only access your own user data.');
-    //     }
-
-    //     return this.userService.findOngByUserId(param.id, userId, role);
-    // }
 }

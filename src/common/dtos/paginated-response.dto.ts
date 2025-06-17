@@ -2,9 +2,7 @@ import { Type } from 'class-transformer';
 
 export class PaginationMetaDto {
     total: number;
-
     page: number;
-
     last_page: number;
 }
 

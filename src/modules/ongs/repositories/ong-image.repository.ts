@@ -14,4 +14,16 @@ export class OngImageRepository implements IOngImageRepository {
         });
         return result;
     }
+
+    async softDeleteMany(ids: string[]): Promise<void> {
+        await this.prisma.ongImage.updateMany({
+            where: {
+                id: { in: ids },
+                deleted_at: null,
+            },
+            data: {
+                deleted_at: new Date(),
+            },
+        });
+    }
 }

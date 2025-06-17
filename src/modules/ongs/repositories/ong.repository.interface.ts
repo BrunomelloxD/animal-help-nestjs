@@ -8,4 +8,5 @@ export abstract class IOngRepository {
     abstract findById(id: string): Promise<Ong | null>;
     abstract findAll({ page, limit }: PaginationDto, role: Role): Promise<PaginatedResponseDto<Ong>>;
     abstract delete(id: string): Promise<void>;
+    abstract findOngByUserId({ page, limit }: PaginationDto, userId: string): Promise<PaginatedResponseDto<Ong>>;
 }
