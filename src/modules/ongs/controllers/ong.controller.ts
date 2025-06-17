@@ -1,17 +1,14 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Put, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { OngService } from '../services/ong.service';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { Ong } from '../../../../generated/prisma'
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { OngResponseDto } from '../dtos/response/ong-response.dto';
-import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
 import { CreateOngDto } from '../dtos/create-ong.dto';
 import { GetUserId } from 'src/common/decorators/get-user-id.decorator';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { GetUserRole } from 'src/common/decorators/get-user-role.decorator';
 import { Role } from 'src/common/enums/role.enum';
+import { UpdateOngDto } from '../dtos/update-ong.dto';
+import { UploadImages } from 'src/common/decorators/upload-images.decorator';
 
 @Controller('ongs')
 export class OngController {
@@ -23,18 +20,7 @@ export class OngController {
     }
 
     @Post()
-    @UseInterceptors(
-        FilesInterceptor('images', 5, {
-            storage: diskStorage({
-                destination: './uploads',
-                filename: (req, file, cb) => {
-                    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-                    cb(null, uniqueSuffix + extname(file.originalname));
-                },
-            }),
-        }),
-        new TransformInterceptor(OngResponseDto),
-    )
+    @UploadImages()
     @HttpCode(HttpStatus.CREATED)
     async create(
         @Body() data: CreateOngDto,
@@ -53,5 +39,16 @@ export class OngController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(@Param('id') id: string): Promise<void> {
         return await this.ongService.delete(id);
+    }
+
+    @Put(':id')
+    @UploadImages()
+    @HttpCode(HttpStatus.OK)
+    async update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() data: UpdateOngDto,
+        @UploadedFiles() files?: Express.Multer.File[],
+    ): Promise<Ong> {
+        return this.ongService.update(id, data, files);
     }
 }

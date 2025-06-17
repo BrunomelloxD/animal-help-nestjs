@@ -9,7 +9,7 @@ import { AdminModule } from 'src/modules/admins/admin.module';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { EmailModule } from 'src/modules/mailer/mailer.module';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
-import { server } from 'src/config/env';
+import { server } from 'src/common/config/env.config';
 
 @Module({
   imports: [OngModule, UserModule, AuthModule, AdminModule, EmailModule,

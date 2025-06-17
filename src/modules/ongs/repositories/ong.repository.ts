@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { IOngRepository } from "./ong.repository.interface";
-import { PrismaService } from "src/config/prisma/services/prisma.service";
+import { PrismaService } from "src/common/config/prisma/services/prisma.service";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { Ong, Prisma } from "generated/prisma";
 import { PaginatedResponseDto } from "src/common/dtos/paginated-response.dto";
@@ -9,6 +9,14 @@ import { Role } from "src/common/enums/role.enum";
 @Injectable()
 export class OngRepository implements IOngRepository {
     constructor(private readonly prisma: PrismaService) { }
+
+    async update(id: string, data: Prisma.OngUpdateInput): Promise<Ong> {
+        const ID = +id;
+        return this.prisma.ong.update({
+            where: { id: ID },
+            data,
+        });
+    }
 
     async delete(id: string): Promise<void> {
         const ID = +id;

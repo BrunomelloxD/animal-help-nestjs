@@ -5,12 +5,24 @@ import { OngRepository } from "../repositories/ong.repository";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { CreateOngDto } from "../dtos/create-ong.dto";
 import { OngImageRepository } from "../repositories/ong-image.repository";
-import { server } from 'src/config/env';
+import { server } from 'src/common/config/env.config';
 import { Role } from "src/common/enums/role.enum";
+import { UpdateOngDto } from "../dtos/update-ong.dto";
 
 @Injectable()
 export class OngService {
     constructor(private readonly ongRepository: OngRepository, private readonly ongImageRepository: OngImageRepository) { }
+
+    async update(id: number, data: UpdateOngDto, files?: Express.Multer.File[]): Promise<Ong> {
+        const updatedOng = await this.ongRepository.update(id.toString(), data);
+
+        if (files && files.length > 0) {
+            await this.saveImages(updatedOng.id, files);
+        }
+
+        return updatedOng;
+    }
+
 
     async delete(id: string): Promise<void> {
         return await this.ongRepository.delete(id);
@@ -29,12 +41,7 @@ export class OngService {
         const ong = await this.ongRepository.create(ongData);
 
         if (files && files.length > 0) {
-            const imageData = files.map((file) => ({
-                ong_id: ong.id,
-                url: `${server.config.base_url}:${server.config.port}/uploads/${file.filename}`,
-            }));
-
-            await this.ongImageRepository.create(imageData);
+            await this.saveImages(ong.id, files);
         }
 
         return ong;
@@ -59,4 +66,16 @@ export class OngService {
             }
         };
     }
+
+    private async saveImages(ongId: number, files: Express.Multer.File[]): Promise<void> {
+        if (!files?.length) return;
+
+        const imageData = files.map((file) => ({
+            ong_id: ongId,
+            url: `${server.config.base_url}:${server.config.port}/uploads/${file.filename}`,
+        }));
+
+        await this.ongImageRepository.create(imageData);
+    }
+
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { IOngImageRepository } from "./ong-image.repository.interface";
 import { OngImage, Prisma } from "generated/prisma";
-import { PrismaService } from "src/config/prisma/services/prisma.service";
+import { PrismaService } from "src/common/config/prisma/services/prisma.service";
 
 
 @Injectable()

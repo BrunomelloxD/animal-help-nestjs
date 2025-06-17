@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from "@nestjs/common";
 import { Prisma, User } from '../../../../generated/prisma'
 import { UserRepository } from "../repositories/user.repository";
 import * as bcrypt from 'bcrypt';
-import { security } from '../../../config/env'
+import { security } from '../../../common/config/env.config'
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginatedResponseDto } from "src/common/dtos/paginated-response.dto";
 import { Role } from "src/common/enums/role.enum";

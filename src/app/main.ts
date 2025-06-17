@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { server } from 'src/config/env';
+import { server } from 'src/common/config/env.config';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 

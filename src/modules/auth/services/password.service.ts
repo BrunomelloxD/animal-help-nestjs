@@ -1,5 +1,5 @@
 import { compare, hash } from 'bcrypt';
-import { security } from '../../../config/env';
+import { security } from '../../../common/config/env.config';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { MailerService } from "src/modules/mailer/services/mailer.service";
