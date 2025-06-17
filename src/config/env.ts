@@ -1,7 +1,10 @@
 import 'dotenv';
 
 export const server = {
-    port: process.env.PORT ? +process.env.PORT : 3000,
+    config: {
+        port: process.env.PORT ? +process.env.PORT : 3000,
+        base_url: process.env.BASE_URL,
+    },
     rabbitqm: {
         url: process.env.RABBITMQ_URI ?? 'amqp://guest:guest@rabbitmq:5672'
     }

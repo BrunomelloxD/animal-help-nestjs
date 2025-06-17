@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../config/prisma/services/prisma.service';
 import { IUserRepository } from './user.repository.interface';
 import { User, Prisma } from '../../../../generated/prisma';
-import { Role } from 'src/common/enums/role.enum';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 

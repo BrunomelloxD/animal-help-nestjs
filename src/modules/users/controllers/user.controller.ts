@@ -12,6 +12,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { GetUserId } from 'src/common/decorators/get-user-id.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('users')
 export class UserController {
@@ -25,27 +26,24 @@ export class UserController {
     }
 
     @Post()
+    @Public()
     @UseInterceptors(new TransformInterceptor(UserResponseDto))
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() data: CreateUserDto) {
-        if (await this.userService.findByEmail(data.email)) {
-            throw new ConflictException(`User with email ${data.email} already exists`);
-        }
-
         return this.userService.create(data);
     }
 
     @Get(':id')
     @UseInterceptors(new TransformInterceptor(UserResponseDto))
-    async findById(@Param() param: Record<'id', string>, @GetUserRole() role: Role, @GetUserId() userId: string): Promise<User | null> {
-        if (role !== Role.ADMIN && param.id !== userId) {
+    async findById(@Param('id') id: string, @GetUserRole() role: Role, @GetUserId() userId: string): Promise<User | null> {
+        if (role !== Role.ADMIN && id !== userId) {
             throw new ForbiddenException('You can only access your own user data.');
         }
 
-        const user = await this.userService.findById(param.id);
+        const user = await this.userService.findById(id);
 
         if (!user) {
-            throw new NotFoundException(`User with id ${param.id} not found`);
+            throw new NotFoundException(`User with id ${id} not found`);
         }
 
         return user;
@@ -53,27 +51,36 @@ export class UserController {
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    delete(@Param() param: Record<'id', string>): Promise<void> {
-        return this.userService.delete(param.id);
+    delete(@Param('id') id: string): Promise<void> {
+        return this.userService.delete(id);
     }
 
     @Put(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async update(@Param() param: Record<'id', string>, @Body() data: UpdateUserDto, @GetUserRole() role: Role, @GetUserId() userId: string): Promise<User> {
-        if (role !== Role.ADMIN && param.id !== userId) {
+    async update(@Param('id') id: string, @Body() data: UpdateUserDto, @GetUserRole() role: Role, @GetUserId() userId: string): Promise<User> {
+        if (role !== Role.ADMIN && id !== userId) {
             throw new ForbiddenException('You can only update your own user data.');
         }
 
-        const user = await this.userService.findById(param.id);
+        const user = await this.userService.findById(id);
         if (!user) {
-            throw new NotFoundException(`User with id ${param.id} not found`);
+            throw new NotFoundException(`User with id ${id} not found`);
         }
 
         const userByEmail = await this.userService.findByEmail(data.email);
-        if (userByEmail && userByEmail.id !== param.id) {
+        if (userByEmail && userByEmail.id !== id) {
             throw new ConflictException(`User with email ${data.email} already exists`);
         }
 
-        return this.userService.update(param.id, data);
+        return this.userService.update(id, data);
     }
+
+    // @Get('ong/by-user-id/:id')
+    // async findOngByUserId(@Param() param: Record<'id', string>, @GetUserId() userId: string, @GetUserRole() role: Role): Promise<User | null> {
+    //     if (role !== Role.ADMIN && param.id !== userId) {
+    //         throw new ForbiddenException('You can only access your own user data.');
+    //     }
+
+    //     return this.userService.findOngByUserId(param.id, userId, role);
+    // }
 }

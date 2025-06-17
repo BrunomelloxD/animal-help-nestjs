@@ -1,10 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { Prisma, User } from '../../../../generated/prisma'
 import { UserRepository } from "../repositories/user.repository";
 import * as bcrypt from 'bcrypt';
 import { security } from '../../../config/env'
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginatedResponseDto } from "src/common/dtos/paginated-response.dto";
+import { Role } from "src/common/enums/role.enum";
 
 @Injectable()
 export class UserService {
@@ -14,7 +15,11 @@ export class UserService {
         return this.userRepository.findAll(paginationDto);
     }
 
-    create(data: Prisma.UserCreateInput): Promise<User> {
+    async create(data: Prisma.UserCreateInput): Promise<User> {
+        if (await this.findByEmail(data.email)) {
+            throw new ConflictException(`User with email ${data.email} already exists`);
+        }
+
         const hashedPassword = bcrypt.hashSync(data.password, security.bcrypt.saltRounds);
         data.password = hashedPassword;
 
@@ -36,4 +41,8 @@ export class UserService {
     update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
         return this.userRepository.update(id, data);
     }
+
+    // findOngByUserId(id: string, userId: string, role: Role): Promise<User | null> {
+    //     return this.userRepository.findOngByUserId(id, userId, role);
+    // }
 }
