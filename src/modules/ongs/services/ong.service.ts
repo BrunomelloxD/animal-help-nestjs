@@ -93,7 +93,6 @@ export class OngService {
             url: `${server.config.base_url}:${server.config.port}/uploads/${file.filename}`,
         }));
 
-        await this.ongImageRepository.create(imageData);
+        const result = await this.ongImageRepository.create(imageData);
     }
-
 }

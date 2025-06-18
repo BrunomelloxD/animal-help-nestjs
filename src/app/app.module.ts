@@ -10,9 +10,10 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { EmailModule } from 'src/modules/mailer/mailer.module';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { server } from 'src/common/config/env.config';
+import { AnimalModule } from 'src/modules/animals/animal.module';
 
 @Module({
-  imports: [OngModule, UserModule, AuthModule, AdminModule, EmailModule,
+  imports: [OngModule, UserModule, AuthModule, AdminModule, EmailModule, AnimalModule,
     RabbitMQModule.forRoot({
       exchanges: [
         {
