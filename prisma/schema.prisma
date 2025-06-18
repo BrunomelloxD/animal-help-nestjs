@@ -31,8 +31,8 @@ model Ong {
   user_id String
   user    User   @relation(fields: [user_id], references: [id])
 
-  images OngImage[]
-  Animal Animal[]
+  images  OngImage[]
+  animals Animal[]
 
   @@index([deleted_at, id])
   @@map("ongs")
@@ -44,7 +44,6 @@ model OngImage {
   ong_id     Int
   url        String
   created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
   @@index([deleted_at, id])
@@ -108,7 +107,6 @@ model AnimalImage {
   animal_id  Int
   url        String
   created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
   @@index([deleted_at, id])
