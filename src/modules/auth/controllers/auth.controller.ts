@@ -8,7 +8,7 @@ import { ResetPasswordDto } from '../dtos/reset-password.dto';
 import { PasswordService } from '../services/password.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService, private passwordService: PasswordService) { }

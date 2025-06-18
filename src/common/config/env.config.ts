@@ -6,7 +6,7 @@ export const server = {
         base_url: process.env.BASE_URL,
     },
     rabbitqm: {
-        url: process.env.RABBITMQ_URI ?? 'amqp://guest:guest@rabbitmq:5672'
+        url: process.env.RABBITMQ_URI ?? 'amqp://guest:guest@rabbitmq:15672'
     }
 };
 
